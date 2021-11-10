@@ -1,0 +1,9 @@
+Package: <<packageName>>
+Version: <<version>>
+Architecture: all
+Maintainer: nobody
+Depends: uengine (>= 1.0.1)
+Section: utils
+Priority: optional
+Description: Android app deb.
+  Android application apk file package.

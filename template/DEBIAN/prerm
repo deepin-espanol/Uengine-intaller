@@ -1,0 +1,31 @@
+#!/bin/sh
+
+APP_NAME="<<packageName>>"
+
+session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
+if test -z "$session_manager"; then
+    echo "ERROR: app install failed(session-manager not start)."
+    exit 1
+fi
+
+echo "Uninstalling $APP_NAME"
+ret=`/usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg="$APP_NAME"`
+if [ $? -ne 0 ]; then
+    echo "ERROR: app uninstall error..."
+    exit 1
+fi
+chkfail=`echo $ret |grep "Failed"`
+if test -n "$chkfail" ; then
+    echo "ERROR: $ret"
+    exit 1
+fi
+
+cat /etc/passwd | awk -F: '$3>=1000' | cut -f 1 -d : | while read line
+do
+    inifile="/home/$line/.config/uengineAppGeometry.ini"
+    if [ -f $inifile ]; then
+        sed -i "/$APP_NAME/d" $inifile
+    fi
+done
+
+exit 0

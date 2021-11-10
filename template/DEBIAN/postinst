@@ -1,0 +1,44 @@
+#!/bin/sh
+
+APK_DIR="/usr/share/uengine/apk"
+APK_NAME="<<apkFileName>>"
+APK_PATH="$APK_DIR/$APK_NAME"
+DESKTOP_FILE="<<desktopFile>>"
+ICON_FILE="<<iconFile>>"
+
+if [ -f $APK_PATH ]; then
+    echo "Installing $APK_NAME"
+else 
+    echo "ERROR: $APK_NAME file not found."
+    exit 1
+fi
+
+session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
+if test -z "$session_manager"; then
+    echo "ERROR: app install failed(session-manager not start)."
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+
+ret=`/usr/bin/uengine-session-launch-helper -- uengine install  --apk="$APK_PATH"`
+if [ $? -ne 0 ]; then
+    echo "ERROR: apk install error..."
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+chkfail=`echo $ret |grep "Failed"`
+if test -n "$chkfail" ; then
+    echo "ERROR: $ret"
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+
+sudo rm -f "$APK_PATH"
+
+exit 0

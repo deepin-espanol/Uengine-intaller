@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/pkg">
+        <file>template/DEBIAN/control</file>
+        <file>template/DEBIAN/postinst</file>
+        <file>template/DEBIAN/prerm</file>
+        <file>template/usr/share/applications/uengine.name.desktop</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>src/image/deepines.png</file>
+    </qresource>
+</RCC>
